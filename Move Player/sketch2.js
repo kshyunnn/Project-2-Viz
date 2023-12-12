@@ -12,13 +12,24 @@ const stationLabels = [
 ];
 
 function setup() {
-  createCanvas(400, 400);
+  createCanvas(850,600);
   player = new Player();
 
   // Create bike stations
+  const stationPositions = [
+    { x: 100, y: 100 },
+    { x: 150, y: 250 },
+    { x: 400, y: 100 },
+    { x: 550, y: 250 },
+    { x: 100, y: 400 },
+    { x: 250, y: 550 },
+    { x: 400, y: 400 },
+    { x: 550, y: 550 }
+  ];
+
   for (let i = 0; i < stationLabels.length; i++) {
     let station = {
-      position: createVector(random(width), random(height)),
+      position: createVector(stationPositions[i].x, stationPositions[i].y),
       label: stationLabels[i],
       value: floor(random(5, 20)) // Random bike counts between 5 and 20
     };
@@ -27,7 +38,23 @@ function setup() {
 }
 
 function draw() {
-  background(220);
+  background(240); // Light grey background
+
+  // Draw main roads
+  stroke(180); // Light grey lines for roads
+  strokeWeight(8);
+  line(200, 0, 200, height); // Vertical road
+  line(0, 200, width, 200); // Horizontal road
+
+  // Draw minor roads
+  stroke(200); // Light grey lines for minor roads
+  strokeWeight(4);
+  for (let i = 0; i < width; i += 60) {
+    line(i, 0, i, height); // Vertical minor roads
+  }
+  for (let j = 0; j < height; j += 60) {
+    line(0, j, width, j); // Horizontal minor roads
+  }
 
   // Display bike stations
   for (let station of bikeStations) {
@@ -43,18 +70,6 @@ function draw() {
       textSize(14);
       textAlign(CENTER, CENTER);
       text(station.label, station.position.x, station.position.y - 15);
-    }
-  }
-
-  // Check if player reached any bike station
-  for (let station of bikeStations) {
-    let d = dist(player.pos.x, player.pos.y, station.position.x, station.position.y);
-    if (d < player.size / 2 + 10) { // Player touches station
-      fill(0);
-      textSize(12);
-      textAlign(CENTER, CENTER);
-      text(station.label, width / 2, height - 50);
-      text("Bikes Available: " + station.value, width / 2, height - 30);
     }
   }
 
